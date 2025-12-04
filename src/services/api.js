@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://localhost:8000/api/v1';
 
 export const api = {
     async getViolations() {
@@ -24,7 +24,7 @@ export const api = {
     },
 
     async getDashboardStats() {
-        const response = await fetch(`${API_URL}/stats/dashboard`);
+        const response = await fetch(`${API_URL}/analytics/dashboard`);
         if (!response.ok) {
             throw new Error('Failed to fetch dashboard stats');
         }
@@ -32,7 +32,7 @@ export const api = {
     },
 
     async getChartData() {
-        const response = await fetch(`${API_URL}/stats/charts`);
+        const response = await fetch(`${API_URL}/analytics/charts`);
         if (!response.ok) {
             throw new Error('Failed to fetch chart data');
         }
@@ -40,7 +40,7 @@ export const api = {
     },
 
     async getAnalyticsData() {
-        const response = await fetch(`${API_URL}/stats/analytics`);
+        const response = await fetch(`${API_URL}/analytics/summary`);
         if (!response.ok) {
             throw new Error('Failed to fetch analytics data');
         }
@@ -80,5 +80,43 @@ export const api = {
         });
         if (!response.ok) throw new Error('Failed to delete camera');
         return response.json();
+    },
+
+    // Authentication
+    async login(username, password) {
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+
+        const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            body: formData,
+        });
+        if (!response.ok) throw new Error('Login failed');
+        return response.json();
+    },
+
+    async getCurrentUser() {
+        const token = localStorage.getItem('access_token');
+        if (!token) throw new Error('No token found');
+        
+        const response = await fetch(`${API_URL}/auth/me`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) throw new Error('Failed to get current user');
+        return response.json();
+    },
+
+    // Test connection
+    async testConnection() {
+        try {
+            const response = await fetch(`${API_URL}/violations/?limit=1`);
+            return response.ok;
+        } catch (error) {
+            console.error('Backend connection test failed:', error);
+            return false;
+        }
     }
 };
