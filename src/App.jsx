@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import TopNavbar from './components/TopNavbar';
+import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import Violations from './pages/Violations';
 import Analytics from './pages/Analytics';
@@ -11,14 +12,38 @@ import { api } from './services/api';
 function App() {
   const [currentPath, setCurrentPath] = useState('/');
   const [backendConnected, setBackendConnected] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Test backend connection on app load
-    const testConnection = async () => {
+    // Test backend connection and check authentication on app load
+    const initializeApp = async () => {
       const isConnected = await api.testConnection();
       setBackendConnected(isConnected);
+
+      // Check if user is already logged in
+      const token = localStorage.getItem('access_token');
+      const storedUser = localStorage.getItem('user');
+      
+      if (token && storedUser) {
+        try {
+          // Verify token is still valid by getting current user
+          const currentUser = await api.getCurrentUser();
+          setIsAuthenticated(true);
+          setUser(currentUser);
+        } catch (error) {
+          // Token is invalid, clear storage
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('token_type');
+          localStorage.removeItem('user');
+        }
+      }
+      
+      setLoading(false);
     };
-    testConnection();
+    
+    initializeApp();
   }, []);
 
   const handleNavigate = (path) => {
@@ -26,6 +51,37 @@ function App() {
     // In a real app, you'd use React Router's navigate here
     // For this demo, we'll just update the state
   };
+
+  const handleLoginSuccess = (userData) => {
+    setIsAuthenticated(true);
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('token_type');
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    setUser(null);
+    setCurrentPath('/');
+  };
+
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-teal-400/30 border-t-teal-400 rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  }
 
   const renderPage = () => {
     switch (currentPath) {
@@ -90,7 +146,7 @@ function App() {
       <Sidebar currentPath={currentPath} onNavigate={handleNavigate} />
 
       <div className="ml-64">
-        <TopNavbar />
+        <TopNavbar user={user} onLogout={handleLogout} />
         
         {/* Backend Connection Status */}
         {backendConnected !== null && (

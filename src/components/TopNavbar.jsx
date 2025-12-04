@@ -1,7 +1,9 @@
-import React from 'react';
-import { Search, Bell, User, Calendar, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Bell, User, Calendar, Clock, LogOut, Settings } from 'lucide-react';
 
-const TopNavbar = () => {
+const TopNavbar = ({ user, onLogout }) => {
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  
   const currentDate = new Date();
   const dateString = currentDate.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -56,16 +58,54 @@ const TopNavbar = () => {
           </div>
         </button>
 
-        {/* Profile Avatar */}
-        <button className="flex items-center space-x-3 hover:bg-white/10 rounded-lg p-2 transition-colors">
-          <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-accent-purple rounded-full flex items-center justify-center">
-            <User className="w-4 h-4 text-white" />
-          </div>
-          <div className="hidden md:block text-left">
-            <div className="text-sm font-medium text-white">Admin User</div>
-            <div className="text-xs text-gray-400">System Administrator</div>
-          </div>
-        </button>
+        {/* Profile Avatar with Dropdown */}
+        <div className="relative">
+          <button 
+            onClick={() => setShowUserMenu(!showUserMenu)}
+            className="flex items-center space-x-3 hover:bg-white/10 rounded-lg p-2 transition-colors"
+          >
+            <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-purple-600 rounded-full flex items-center justify-center">
+              <User className="w-4 h-4 text-white" />
+            </div>
+            <div className="hidden md:block text-left">
+              <div className="text-sm font-medium text-white">
+                {user?.full_name || user?.username || 'User'}
+              </div>
+              <div className="text-xs text-gray-400 capitalize">
+                {user?.role?.toLowerCase().replace('_', ' ') || 'User'}
+              </div>
+            </div>
+          </button>
+
+          {/* User Dropdown Menu */}
+          {showUserMenu && (
+            <div className="absolute right-0 mt-2 w-48 glass-card border border-white/20 shadow-lg z-50">
+              <div className="p-3 border-b border-white/10">
+                <div className="text-sm font-medium text-white">{user?.full_name || user?.username}</div>
+                <div className="text-xs text-gray-400">{user?.email}</div>
+                <div className="text-xs text-teal-400 capitalize">{user?.role?.toLowerCase().replace('_', ' ')}</div>
+              </div>
+              
+              <div className="p-2">
+                <button className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-300 hover:bg-white/10 rounded-lg transition-colors">
+                  <Settings className="w-4 h-4" />
+                  <span>Settings</span>
+                </button>
+                
+                <button 
+                  onClick={() => {
+                    setShowUserMenu(false);
+                    onLogout();
+                  }}
+                  className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

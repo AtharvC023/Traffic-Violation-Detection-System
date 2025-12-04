@@ -1,8 +1,21 @@
 const API_URL = 'http://localhost:8000/api/v1';
 
+// Helper function to get auth headers
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('access_token');
+  return token ? {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  } : {
+    'Content-Type': 'application/json'
+  };
+};
+
 export const api = {
     async getViolations() {
-        const response = await fetch(`${API_URL}/violations/`);
+        const response = await fetch(`${API_URL}/violations/`, {
+            headers: getAuthHeaders()
+        });
         if (!response.ok) {
             throw new Error('Failed to fetch violations');
         }
@@ -12,9 +25,7 @@ export const api = {
     async createViolation(violationData) {
         const response = await fetch(`${API_URL}/violations/`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify(violationData),
         });
         if (!response.ok) {
@@ -24,7 +35,9 @@ export const api = {
     },
 
     async getDashboardStats() {
-        const response = await fetch(`${API_URL}/analytics/dashboard`);
+        const response = await fetch(`${API_URL}/analytics/dashboard`, {
+            headers: getAuthHeaders()
+        });
         if (!response.ok) {
             throw new Error('Failed to fetch dashboard stats');
         }
@@ -49,7 +62,9 @@ export const api = {
 
     // Camera Management
     async getCameras() {
-        const response = await fetch(`${API_URL}/cameras/`);
+        const response = await fetch(`${API_URL}/cameras/`, {
+            headers: getAuthHeaders()
+        });
         if (!response.ok) throw new Error('Failed to fetch cameras');
         return response.json();
     },
