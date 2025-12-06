@@ -1,64 +1,112 @@
-# Traffic Violation Detection System Dashboard
+# Traffic Violation Detection System
 
-A modern, responsive React dashboard for managing traffic violations with real-time detection capabilities, analytics, and comprehensive violation management.
+A comprehensive traffic violation detection and management system with AI-powered detection, real-time monitoring, and a modern React dashboard.
 
-## 🚀 Features
+## 🏗️ Project Structure
 
-### Core Features
-- **Modern Dashboard UI** with glassmorphism design
+```
+Traffic-Violation-Detection-System/
+├── frontend/           # React dashboard application
+│   ├── src/           # Source code
+│   ├── public/        # Static assets
+│   └── ...            # Configuration files
+├── backend/           # FastAPI backend server
+│   ├── app/           # Application code
+│   │   ├── api/      # API endpoints
+│   │   ├── models/   # Database models
+│   │   ├── services/ # Business logic
+│   │   └── ...       # Other modules
+│   └── ...           # Configuration files
+└── README.md         # This file
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **Python** (v3.8 or higher)
+- **pip** (Python package manager)
+- **npm** or **yarn**
+
+### 1. Setup Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+python init_db.py
+python start.py
+```
+
+Backend will run on `http://localhost:8000`
+
+### 2. Setup Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend will run on `http://localhost:5174`
+
+### 3. Access the Application
+
+- **Dashboard**: http://localhost:5174
+- **API Documentation**: http://localhost:8000/docs
+- **Backend API**: http://localhost:8000/api/v1
+
+## 🔐 Login Credentials
+
+### Admin Account
+- **Username**: `admin`
+- **Password**: `admin123`
+
+### Operator Account
+- **Username**: `operator`
+- **Password**: `operator123`
+
+## 🎯 Features
+
+### Frontend Dashboard
+- **Modern UI** with glassmorphism design
 - **Real-time Traffic Monitoring** with live camera feeds
-- **Comprehensive Violations Management** with filtering and search
-- **Advanced Analytics** with interactive charts and insights
-- **Responsive Design** that works on desktop and tablet
-- **Dark Theme** with vibrant accent colors
+- **Violations Management** with filtering and search
+- **Advanced Analytics** with interactive charts
+- **Responsive Design** for desktop and tablet
+- **Dark Theme** with vibrant accents
+
+### Backend API
+- **FastAPI** with async support
+- **JWT Authentication** for secure access
+- **SQLAlchemy ORM** with SQLite database
+- **WebSocket Support** for real-time updates
+- **RESTful API** with OpenAPI documentation
+- **AI Integration** for violation detection
+- **File Upload** for video/image processing
 
 ### Dashboard Pages
-1. **Main Dashboard** - Overview with stats cards, live video feed, recent violations, and summary charts
-2. **Violations Management** - Full CRUD operations with filtering, search, and detailed violation views
-3. **Analytics** - Comprehensive data visualization with performance metrics and insights
-4. **Live Detection** - Real-time traffic violation detection interface
-5. **Process Video/Images** - Upload and process media for violation detection
-6. **Archive** - Historical data management
-7. **Settings** - System configuration
-
-### UI Components
-- **Glassmorphism Cards** with backdrop blur effects
-- **Interactive Charts** powered by Recharts
-- **Responsive Tables** with sorting and filtering
-- **Modal Overlays** for detailed views
-- **Severity Badges** with color coding
-- **Status Indicators** with real-time updates
+1. **Main Dashboard** - Overview with stats, live feeds, and charts
+2. **Violations Management** - CRUD operations with filtering
+3. **Analytics** - Data visualization and insights
+4. **Camera Management** - Monitor and configure cameras
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18, Vite
-- **Styling**: Tailwind CSS with custom themes
-- **Charts**: Recharts for data visualization
-- **Icons**: Lucide React
-- **Routing**: React Router DOM
-- **Date Handling**: date-fns
-- **UI Components**: Headless UI
+### Frontend
+- **React 18** - UI framework
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Recharts** - Data visualization
+- **Lucide React** - Icons
+- **React Router DOM** - Routing
 
-## 📦 Project Structure
-
-```
-src/
-├── components/          # Reusable UI components
-│   ├── Sidebar.jsx     # Navigation sidebar
-│   ├── TopNavbar.jsx   # Top navigation bar
-│   ├── StatCard.jsx    # Statistics display cards
-│   ├── ViolationsTable.jsx  # Violations data table
-│   ├── VideoPreviewPanel.jsx  # Live video preview
-│   └── AnalyticsCharts.jsx    # Chart components
-├── pages/              # Main application pages
-│   ├── Dashboard.jsx   # Main dashboard page
-│   ├── Violations.jsx  # Violations management page
-│   └── Analytics.jsx   # Analytics and insights page
-├── data/               # Mock data and constants
-│   └── mockData.js     # Sample violation data
-└── styles/
-    └── index.css       # Global styles and Tailwind config
-```
+### Backend
+- **FastAPI** - Web framework
+- **SQLAlchemy** - ORM
+- **SQLite** - Database
+- **JWT** - Authentication
+- **Uvicorn** - ASGI server
+- **Pydantic** - Data validation
 
 ## 🎨 Design System
 

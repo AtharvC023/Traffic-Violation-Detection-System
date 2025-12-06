@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testAPI()">Test API</button>
+    <div id="result"></div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api/v1';
+        
+        async function testLogin() {
+            const formData = new FormData();
+            formData.append('username', 'admin');
+            formData.append('password', 'admin123');
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('access_token', data.access_token);
+                    document.getElementById('result').innerHTML = 
+                        `<h3>Login Success!</h3>
+                         <p>Token: ${data.access_token.substring(0, 50)}...</p>
+                         <p>User: ${data.user.username}</p>`;
+                } else {
+                    document.getElementById('result').innerHTML = 
+                        `<h3>Login Failed!</h3><p>${JSON.stringify(data)}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<h3>Login Error!</h3><p>${error.message}</p>`;
+            }
+        }
+
+        async function testAPI() {
+            const token = localStorage.getItem('access_token');
+            
+            try {
+                const response = await fetch(`${API_URL}/violations/?limit=1`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('result').innerHTML = 
+                        `<h3>API Success!</h3>
+                         <p>Status: ${response.status}</p>
+                         <p>Data: ${JSON.stringify(data, null, 2)}</p>`;
+                } else {
+                    document.getElementById('result').innerHTML = 
+                        `<h3>API Failed!</h3>
+                         <p>Status: ${response.status}</p>
+                         <p>Error: ${JSON.stringify(data)}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<h3>API Error!</h3><p>${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

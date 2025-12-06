@@ -17,8 +17,6 @@ const Cameras = () => {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCamera, setEditingCamera] = useState(null);
-
-    // Form state
     const [formData, setFormData] = useState({
         id: '',
         location: '',

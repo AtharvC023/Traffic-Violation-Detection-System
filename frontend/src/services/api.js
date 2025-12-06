@@ -1,6 +1,5 @@
 const API_URL = 'http://localhost:8000/api/v1';
 
-// Helper function to get auth headers
 const getAuthHeaders = () => {
   const token = localStorage.getItem('access_token');
   return token ? {
@@ -45,7 +44,9 @@ export const api = {
     },
 
     async getChartData() {
-        const response = await fetch(`${API_URL}/analytics/charts`);
+        const response = await fetch(`${API_URL}/analytics/charts`, {
+            headers: getAuthHeaders()
+        });
         if (!response.ok) {
             throw new Error('Failed to fetch chart data');
         }
@@ -53,7 +54,9 @@ export const api = {
     },
 
     async getAnalyticsData() {
-        const response = await fetch(`${API_URL}/analytics/summary`);
+        const response = await fetch(`${API_URL}/analytics/summary`, {
+            headers: getAuthHeaders()
+        });
         if (!response.ok) {
             throw new Error('Failed to fetch analytics data');
         }
@@ -72,7 +75,7 @@ export const api = {
     async addCamera(cameraData) {
         const response = await fetch(`${API_URL}/cameras/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify(cameraData),
         });
         if (!response.ok) throw new Error('Failed to add camera');
@@ -82,7 +85,7 @@ export const api = {
     async updateCamera(id, cameraData) {
         const response = await fetch(`${API_URL}/cameras/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify(cameraData),
         });
         if (!response.ok) throw new Error('Failed to update camera');
@@ -92,6 +95,7 @@ export const api = {
     async deleteCamera(id) {
         const response = await fetch(`${API_URL}/cameras/${id}`, {
             method: 'DELETE',
+            headers: getAuthHeaders(),
         });
         if (!response.ok) throw new Error('Failed to delete camera');
         return response.json();
@@ -124,13 +128,13 @@ export const api = {
         return response.json();
     },
 
-    // Test connection
     async testConnection() {
         try {
-            const response = await fetch(`${API_URL}/violations/?limit=1`);
+            const response = await fetch(`${API_URL}/violations/?limit=1`, {
+                headers: getAuthHeaders()
+            });
             return response.ok;
         } catch (error) {
-            console.error('Backend connection test failed:', error);
             return false;
         }
     }

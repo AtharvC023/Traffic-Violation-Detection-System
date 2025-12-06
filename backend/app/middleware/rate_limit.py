@@ -14,11 +14,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     
     def __init__(self, app: ASGIApp):
         super().__init__(app)
-        try:
-            self.redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
-        except Exception as e:
-            logger.warning(f"Redis connection failed, rate limiting disabled: {e}")
-            self.redis_client = None
+        # Disable Redis rate limiting for now to prevent connection errors
+        logger.info("Rate limiting disabled - using development mode")
+        self.redis_client = None
     
     async def dispatch(self, request: Request, call_next) -> Response:
         if not self.redis_client:

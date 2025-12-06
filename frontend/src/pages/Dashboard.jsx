@@ -35,7 +35,6 @@ const Dashboard = () => {
           api.getChartData()
         ]);
 
-        // Map backend data to frontend format if necessary
         const formattedViolations = violationsData.map(v => ({
           id: v.id,
           time: v.timestamp,
@@ -62,7 +61,6 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // Get recent violations (latest 6)
   const recentViolations = violations.slice(0, 6);
 
   return (

@@ -7,6 +7,11 @@ import Dashboard from './pages/Dashboard';
 import Violations from './pages/Violations';
 import Analytics from './pages/Analytics';
 import Cameras from './pages/Cameras';
+import LiveDetection from './pages/LiveDetection';
+import ProcessVideo from './pages/ProcessVideo';
+import ProcessImage from './pages/ProcessImage';
+import Settings from './pages/Settings';
+import Archive from './pages/Archive';
 import { api } from './services/api';
 
 function App() {
@@ -17,23 +22,19 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Test backend connection and check authentication on app load
     const initializeApp = async () => {
       const isConnected = await api.testConnection();
       setBackendConnected(isConnected);
 
-      // Check if user is already logged in
       const token = localStorage.getItem('access_token');
       const storedUser = localStorage.getItem('user');
       
       if (token && storedUser) {
         try {
-          // Verify token is still valid by getting current user
           const currentUser = await api.getCurrentUser();
           setIsAuthenticated(true);
           setUser(currentUser);
-        } catch (error) {
-          // Token is invalid, clear storage
+        } catch {
           localStorage.removeItem('access_token');
           localStorage.removeItem('token_type');
           localStorage.removeItem('user');
@@ -48,8 +49,6 @@ function App() {
 
   const handleNavigate = (path) => {
     setCurrentPath(path);
-    // In a real app, you'd use React Router's navigate here
-    // For this demo, we'll just update the state
   };
 
   const handleLoginSuccess = (userData) => {
@@ -66,7 +65,6 @@ function App() {
     setCurrentPath('/');
   };
 
-  // Show loading spinner while checking authentication
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -78,7 +76,6 @@ function App() {
     );
   }
 
-  // Show login page if not authenticated
   if (!isAuthenticated) {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
@@ -100,42 +97,16 @@ function App() {
             </div>
           </div>
         );
+      case '/live':
+        return <LiveDetection />;
       case '/video':
-        return (
-          <div className="p-6">
-            <div className="glass-card p-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">Process Video</h2>
-              <p className="text-gray-400">Video processing interface will be implemented here.</p>
-            </div>
-          </div>
-        );
+        return <ProcessVideo />;
       case '/images':
-        return (
-          <div className="p-6">
-            <div className="glass-card p-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">Process Images</h2>
-              <p className="text-gray-400">Image processing interface will be implemented here.</p>
-            </div>
-          </div>
-        );
+        return <ProcessImage />;
       case '/archive':
-        return (
-          <div className="p-6">
-            <div className="glass-card p-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">Archive</h2>
-              <p className="text-gray-400">Archive management interface will be implemented here.</p>
-            </div>
-          </div>
-        );
+        return <Archive />;
       case '/settings':
-        return (
-          <div className="p-6">
-            <div className="glass-card p-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">Settings</h2>
-              <p className="text-gray-400">System settings interface will be implemented here.</p>
-            </div>
-          </div>
-        );
+        return <Settings />;
       default:
         return <Dashboard />;
     }

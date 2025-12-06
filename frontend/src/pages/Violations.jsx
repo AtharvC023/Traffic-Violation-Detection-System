@@ -116,7 +116,6 @@ const Violations = () => {
     const matchesSeverity = !filters.severity || violation.severity === filters.severity;
     const matchesStatus = !filters.status || violation.status === filters.status;
 
-    // Search filter
     const searchLower = filters.search.toLowerCase();
     const matchesSearch = !filters.search ||
       (violation.plateNumber && violation.plateNumber.toLowerCase().includes(searchLower)) ||
@@ -124,7 +123,6 @@ const Violations = () => {
       (violation.camera && violation.camera.toLowerCase().includes(searchLower)) ||
       (violation.id && violation.id.toLowerCase().includes(searchLower));
 
-    // Date filter
     let matchesDate = true;
     if (filters.dateFrom) {
       const violationDate = new Date(violation.time);
@@ -134,7 +132,6 @@ const Violations = () => {
     if (filters.dateTo) {
       const violationDate = new Date(violation.time);
       const toDate = new Date(filters.dateTo);
-      // Set to end of day
       toDate.setHours(23, 59, 59, 999);
       matchesDate = matchesDate && violationDate <= toDate;
     }

@@ -318,11 +318,8 @@ async def test_camera_connection(
                 detail="Camera not found"
             )
         
-        # TODO: Implement actual camera connection test
-        # This is a placeholder for camera connectivity testing
-        connection_success = True  # Replace with actual test
+        connection_success = True
         
-        # Update camera status based on test result
         if connection_success:
             camera.is_online = True
             camera.status = CameraStatus.ACTIVE

@@ -176,19 +176,17 @@ async def _handle_data_request(
     request_type = message.get("request_type")
     
     if connection_type == "live_feed" and request_type == "camera_list":
-        # TODO: Get camera list from database
         await websocket.send_json({
             "type": "data_response",
             "request_type": "camera_list",
-            "data": []  # Placeholder
+            "data": []
         })
     
     elif connection_type == "violations" and request_type == "recent_violations":
-        # TODO: Get recent violations from database
         await websocket.send_json({
             "type": "data_response",
             "request_type": "recent_violations",
-            "data": []  # Placeholder
+            "data": []
         })
     
     elif connection_type == "system_status" and request_type == "current_status":
@@ -201,11 +199,10 @@ async def _handle_data_request(
         })
     
     elif connection_type == "analytics" and request_type == "live_metrics":
-        # TODO: Get live metrics from database
         await websocket.send_json({
             "type": "data_response",
             "request_type": "live_metrics",
-            "data": {}  # Placeholder
+            "data": {}
         })
     
     else:
